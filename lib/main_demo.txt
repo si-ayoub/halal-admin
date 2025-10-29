@@ -1,0 +1,10 @@
+﻿void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // COMMENTEZ CES 3 LIGNES POUR LE MODE DÉMO :
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+  
+  runApp(const HallalAdminApp());
+}

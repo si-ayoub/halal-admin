@@ -1,0 +1,166 @@
+halal_admin/
+├── lib/
+│   ├── main.dart
+│   │
+│   ├── core/
+│   │   ├── constants/
+│   │   │   ├── app_colors.dart
+│   │   │   ├── app_strings.dart
+│   │   │   ├── api_endpoints.dart
+│   │   │   └── firebase_collections.dart
+│   │   │
+│   │   ├── config/
+│   │   │   ├── app_config.dart
+│   │   │   ├── router_config.dart
+│   │   │   └── theme_config.dart
+│   │   │
+│   │   ├── utils/
+│   │   │   ├── validators.dart
+│   │   │   ├── formatters.dart
+│   │   │   ├── date_utils.dart
+│   │   │   └── promo_code_generator.dart
+│   │   │
+│   │   └── errors/
+│   │       ├── failures.dart
+│   │       └── exceptions.dart
+│   │
+│   ├── data/
+│   │   ├── models/
+│   │   │   ├── restaurant_model.dart
+│   │   │   ├── user_model.dart
+│   │   │   ├── transaction_model.dart
+│   │   │   ├── promo_code_model.dart
+│   │   │   ├── subscription_model.dart
+│   │   │   ├── dish_model.dart
+│   │   │   └── analytics_model.dart
+│   │   │
+│   │   ├── repositories/
+│   │   │   ├── auth_repository.dart
+│   │   │   ├── restaurant_repository.dart
+│   │   │   ├── payment_repository.dart
+│   │   │   ├── analytics_repository.dart
+│   │   │   └── storage_repository.dart
+│   │   │
+│   │   └── services/
+│   │       ├── firebase_service.dart
+│   │       ├── stripe_service.dart
+│   │       ├── notification_service.dart
+│   │       └── local_storage_service.dart
+│   │
+│   ├── domain/
+│   │   ├── entities/
+│   │   │   ├── restaurant.dart
+│   │   │   ├── user.dart
+│   │   │   ├── transaction.dart
+│   │   │   └── subscription.dart
+│   │   │
+│   │   └── usecases/
+│   │       ├── auth/
+│   │       │   ├── sign_in_usecase.dart
+│   │       │   ├── sign_up_usecase.dart
+│   │       │   └── sign_out_usecase.dart
+│   │       │
+│   │       ├── restaurant/
+│   │       │   ├── create_restaurant_usecase.dart
+│   │       │   ├── update_restaurant_usecase.dart
+│   │       │   └── get_restaurant_usecase.dart
+│   │       │
+│   │       └── payment/
+│   │           ├── process_payment_usecase.dart
+│   │           └── manage_subscription_usecase.dart
+│   │
+│   ├── presentation/
+│   │   ├── providers/
+│   │   │   ├── auth_provider.dart
+│   │   │   ├── restaurant_provider.dart
+│   │   │   ├── subscription_provider.dart
+│   │   │   └── analytics_provider.dart
+│   │   │
+│   │   ├── screens/
+│   │   │   ├── splash/
+│   │   │   │   └── splash_screen.dart
+│   │   │   │
+│   │   │   ├── auth/
+│   │   │   │   ├── login_screen.dart
+│   │   │   │   ├── signup_screen.dart
+│   │   │   │   └── forgot_password_screen.dart
+│   │   │   │
+│   │   │   ├── onboarding/
+│   │   │   │   ├── restaurant_info_screen.dart
+│   │   │   │   ├── menu_setup_screen.dart
+│   │   │   │   ├── photos_upload_screen.dart
+│   │   │   │   └── subscription_selection_screen.dart
+│   │   │   │
+│   │   │   ├── dashboard/
+│   │   │   │   ├── dashboard_screen.dart
+│   │   │   │   ├── widgets/
+│   │   │   │   │   ├── stats_card.dart
+│   │   │   │   │   ├── analytics_chart.dart
+│   │   │   │   │   ├── recent_activities.dart
+│   │   │   │   │   └── quick_actions.dart
+│   │   │   │
+│   │   │   ├── restaurant/
+│   │   │   │   ├── restaurant_detail_screen.dart
+│   │   │   │   ├── edit_restaurant_screen.dart
+│   │   │   │   ├── menu_management_screen.dart
+│   │   │   │   └── hours_management_screen.dart
+│   │   │   │
+│   │   │   ├── analytics/
+│   │   │   │   ├── analytics_screen.dart
+│   │   │   │   ├── views_analytics_screen.dart
+│   │   │   │   └── conversion_analytics_screen.dart
+│   │   │   │
+│   │   │   ├── subscription/
+│   │   │   │   ├── subscription_screen.dart
+│   │   │   │   ├── upgrade_screen.dart
+│   │   │   │   └── billing_history_screen.dart
+│   │   │   │
+│   │   │   ├── promo_codes/
+│   │   │   │   ├── promo_codes_screen.dart
+│   │   │   │   └── promo_code_detail_screen.dart
+│   │   │   │
+│   │   │   ├── marketing/
+│   │   │   │   ├── marketing_tools_screen.dart
+│   │   │   │   ├── qr_code_screen.dart
+│   │   │   │   └── social_share_screen.dart
+│   │   │   │
+│   │   │   └── settings/
+│   │   │       ├── settings_screen.dart
+│   │   │       ├── profile_screen.dart
+│   │   │       └── notifications_settings_screen.dart
+│   │   │
+│   │   └── widgets/
+│   │       ├── common/
+│   │       │   ├── custom_button.dart
+│   │       │   ├── custom_text_field.dart
+│   │       │   ├── loading_indicator.dart
+│   │       │   ├── error_widget.dart
+│   │       │   └── custom_app_bar.dart
+│   │       │
+│   │       ├── cards/
+│   │       │   ├── restaurant_card.dart
+│   │       │   ├── stat_card.dart
+│   │       │   └── subscription_card.dart
+│   │       │
+│   │       └── dialogs/
+│   │           ├── confirmation_dialog.dart
+│   │           └── upgrade_dialog.dart
+│   │
+│   └── firebase_options.dart
+│
+├── assets/
+│   ├── images/
+│   ├── icons/
+│   ├── logos/
+│   └── fonts/
+│
+├── test/
+│   ├── unit/
+│   ├── widget/
+│   └── integration/
+│
+├── ios/
+├── android/
+├── web/
+├── pubspec.yaml
+└── README.md

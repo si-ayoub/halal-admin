@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalFood - Donnez de la visibilité Ã  votre restaurant</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(180deg, #0A0A0A 0%, #1A1A1A 50%, #0F0F0F 100%); color: #FFF; overflow-x: hidden; }
+        .header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 8px rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .logo { font-size: 26px; font-weight: 800; background: linear-gradient(135deg, #C9A961 0%, #D4AF37 50%, #C9A961 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .btn-dashboard { color: #F5D6A6; text-decoration: none; font-size: 14px; padding: 10px 18px; border-radius: 8px; border: 1px solid rgba(212,175,55,0.3); transition: all 0.3s; }
+        .btn-dashboard:hover { background: rgba(212,175,55,0.1); color: #D4AF37; border-color: #D4AF37; }
+        .container { max-width: 600px; margin: 0 auto; padding: 60px 20px 80px; }
+        .hero-title { font-size: 48px; font-weight: 800; line-height: 1.15; text-align: center; margin-bottom: 20px; }
+        .hero-subtitle { font-size: 18px; color: #B8B8B8; line-height: 1.6; text-align: center; margin-bottom: 24px; }
+        .phone-section { margin: 50px 0 60px; display: flex; justify-content: center; perspective: 1200px; }
+        .phone-mockup { width: 360px; height: 720px; background: #FFF; border-radius: 50px; padding: 16px; box-shadow: 0 0 0 8px #F5F5F5, 0 50px 100px rgba(0,0,0,0.5); animation: floatPhone 6s ease-in-out infinite; }
+        @keyframes floatPhone { 0%, 100% { transform: translateY(0) rotateY(-3deg); } 50% { transform: translateY(-15px) rotateY(3deg); } }
+        .phone-screen { width: 100%; height: 100%; background: #FFF; border-radius: 42px; overflow: hidden; position: relative; }
+        .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 30px; background: #1C1C1E; border-radius: 0 0 20px 20px; z-index: 10; }
+        .app-screen { width: 100%; height: 100%; background: #000; position: relative; overflow: hidden; }
+        .restaurant-slide { width: 100%; height: 100%; position: absolute; opacity: 0; transition: all 0.8s; transform: translateY(100%); }
+        .restaurant-slide.active { opacity: 1; transform: translateY(0); z-index: 2; }
+        .photo-wrapper { width: 100%; height: 100%; position: relative; }
+        .photo-item { width: 100%; height: 100%; position: absolute; opacity: 0; transition: all 0.6s; transform: translateX(100%); background-size: cover; background-position: center; }
+        .photo-item.active-photo { opacity: 1; transform: translateX(0); z-index: 2; }
+        .slide-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, transparent 100%); padding: 50px 24px 24px; color: white; z-index: 3; }
+        .slide-badges { display: flex; gap: 8px; margin-bottom: 16px; }
+        .badge { padding: 6px 12px; border-radius: 18px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+        .badge-halal { background: #22C55E; }
+        .badge-premium { background: linear-gradient(135deg, #F59E0B, #D97706); }
+        .badge-tendance { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+        .slide-name { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+        .slide-type { font-size: 15px; margin-bottom: 16px; }
+        .slide-action { background: white; color: #1A1A1A; padding: 16px; border-radius: 16px; font-weight: 700; text-align: center; }
+        .slide-stats { position: absolute; top: 60px; right: 20px; z-index: 4; display: flex; flex-direction: column; gap: 20px; }
+        .stat-icon { width: 48px; height: 48px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2px solid rgba(255,255,255,0.2); }
+        .photo-indicator { position: absolute; bottom: 140px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 5; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: all 0.3s; }
+        .dot.active-dot { background: white; width: 28px; border-radius: 4px; }
+        .features-section { margin-top: 50px; margin-bottom: 40px; display: grid; gap: 16px; }
+        .feature-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 24px; border-radius: 16px; display: flex; gap: 16px; transition: all 0.3s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(212,175,55,0.3); }
+        .feature-icon { font-size: 32px; }
+        .feature-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .feature-text { font-size: 14px; color: #B8B8B8; }
+        .welcome-gift { background: linear-gradient(135deg, #FF3B3B, #FF1744); border: 2px solid #FF5252; border-radius: 16px; padding: 24px; text-align: center; font-size: 20px; margin-bottom: 40px; animation: pulse 2s infinite; cursor: pointer; }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 8px 30px rgba(255,59,59,0.4); } 50% { box-shadow: 0 8px 40px rgba(255,59,59,0.7); } }
+        .cta-section { margin-top: 40px; display: flex; flex-direction: column; gap: 16px; }
+        .btn-cta { padding: 20px; border-radius: 14px; font-size: 18px; font-weight: 700; cursor: pointer; border: none; width: 100%; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #D4AF37, #C9A961, #B8984E); color: white; box-shadow: 0 12px 35px rgba(201,169,97,0.35); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 16px 45px rgba(201,169,97,0.45); }
+        .btn-subtitle { font-size: 13px; color: #B8B8B8; text-align: center; margin-top: 6px; }
+        .btn-secondary { background: rgba(255,255,255,0.05); color: #D4AF37; border: 2px solid rgba(212,175,55,0.3); }
+        .btn-secondary:hover { border-color: #D4AF37; background: rgba(212,175,55,0.1); }
+        .promise-section { margin-top: 70px; padding: 50px 40px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; text-align: center; }
+        .promise-icon { font-size: 42px; margin-bottom: 20px; }
+        .promise-title { font-size: 26px; font-weight: 800; margin-bottom: 18px; }
+        .promise-text { font-size: 17px; color: #B8B8B8; margin-bottom: 24px; }
+        .promise-highlight { color: #C9A961; font-weight: 700; }
+        .promise-footer { padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 15px; color: #FFD700; font-weight: 600; }
+        .footer { text-align: center; padding: 50px 20px 30px; color: #666; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.1); }
+        @media (max-width: 768px) {
+            .hero-title { font-size: 36px; }
+            .phone-mockup { width: 320px; height: 640px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">HalalFood</div>
+        <a href="#" class="btn-dashboard">Accéder Ã  mon tableau de bord †’</a>
+    </div>
+    <div class="container">
+        <h1 class="hero-title">ðŸ½ï¸ Donnez de la visibilité Ã  votre restaurant halal en quelques clics</h1>
+        <p class="hero-subtitle">Partenaire n°1 des plus grands influenceurs halal €” présent sur tous les réseaux, nous propulsons la visibilité des restaurants partout en France et Ã  l'international.</p>
+        <div class="phone-section">
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="phone-notch"></div>
+                    <div class="app-screen">
+                        <div class="restaurant-slide active">
+                            <div class="photo-wrapper">
+                                <div class="photo-item active-photo" style="background: linear-gradient(135deg, rgba(217,119,6,0.3), rgba(234,88,12,0.3)), url('https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&q=80'); background-size: cover; background-position: center;"></div>
+                                <div class="photo-item" style="background: linear-gradient(135deg, rgba(180,83,9,0.3), rgba(194,65,12,0.3)), url('https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=800&q=80'); background-size: cover; background-position: center;"></div>
+                                <div class="photo-item" style="background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(217,119,6,0.3)), url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80'); background-size: cover; background-position: center;"></div>
+                            </div>
+                            <div class="photo-indicator">
+                                <span class="dot active-dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <div class="slide-stats">
+                                <div class="stat-icon">¤ï¸</div>
+                                <div class="stat-icon">ðŸ’¬</div>
+                                <div class="stat-icon">ðŸ“¤</div>
+                            </div>
+                            <div class="slide-overlay">
+                                <div class="slide-badges">
+                                    <span class="badge badge-halal">HALAL</span>
+                                    <span class="badge badge-premium">PREMIUM</span>
+                                </div>
+                                <div class="slide-name">Le Délice Oriental</div>
+                                <div class="slide-type">Cuisine marocaine €¢ Paris 11ème</div>
+                                <div class="slide-action">Itinéraire & Horaires</div>
+                            </div>
+                        </div>
+                        <div class="restaurant-slide">
+                            <div class="photo-wrapper">
+                                <div class="photo-item active-photo" style="background: linear-gradient(135deg, rgba(220,38,38,0.3), rgba(153,27,27,0.3)), url('https://images.unsplash.com/photo-1529042410759-befb1204b468?w=800&q=80'); background-size: cover; background-position: center;"></div>
+                                <div class="photo-item" style="background: linear-gradient(135deg, rgba(185,28,28,0.3), rgba(127,29,29,0.3)), url('https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800&q=80'); background-size: cover; background-position: center;"></div>
+                                <div class="photo-item" style="background: linear-gradient(135deg, rgba(220,38,38,0.3), rgba(234,88,12,0.3)), url('https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&q=80'); background-size: cover; background-position: center;"></div>
+                            </div>
+                            <div class="photo-indicator">
+                                <span class="dot active-dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <div class="slide-stats">
+                                <div class="stat-icon">¤ï¸</div>
+                                <div class="stat-icon">ðŸ’¬</div>
+                                <div class="stat-icon">ðŸ“¤</div>
+                            </div>
+                            <div class="slide-overlay">
+                                <div class="slide-badges">
+                                    <span class="badge badge-halal">HALAL</span>
+                                    <span class="badge badge-tendance">TENDANCE</span>
+                                </div>
+                                <div class="slide-name">Istanbul Grill</div>
+                                <div class="slide-type">Spécialités turques €¢ Paris 10ème</div>
+                                <div class="slide-action">Voir la Carte</div>
+                            </div>
+                        </div>
+                        <div class="restaurant-slide">
+                            <div class="photo-wrapper">
+                                <div class="photo-item active-photo" style="background: linear-gradient(135deg, rgba(22,163,74,0.3), rgba(22,101,52,0.3)), url('https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800&q=80'); background-size: cover; background-position: center;"></div>
+                                <div class="photo-item" style="background: linear-gradient(135deg, rgba(21,128,61,0.3), rgba(20,90,50,0.3)), url('https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&q=80'); background-size: cover; background-position: center;"></div>
+                                <div class="photo-item" style="background: linear-gradient(135deg, rgba(22,163,74,0.3), rgba(34,197,94,0.3)), url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80'); background-size: cover; background-position: center;"></div>
+                            </div>
+                            <div class="photo-indicator">
+                                <span class="dot active-dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <div class="slide-stats">
+                                <div class="stat-icon">¤ï¸</div>
+                                <div class="stat-icon">ðŸ’¬</div>
+                                <div class="stat-icon">ðŸ“¤</div>
+                            </div>
+                            <div class="slide-overlay">
+                                <div class="slide-badges">
+                                    <span class="badge badge-halal">HALAL</span>
+                                </div>
+                                <div class="slide-name">Le Jardin de Beyrouth</div>
+                                <div class="slide-type">Cuisine libanaise €¢ Paris 15ème</div>
+                                <div class="slide-action">Partager</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="features-section">
+            <div class="feature-item">
+                <div class="feature-icon">š¡</div>
+                <div>
+                    <div class="feature-title">Inscription rapide</div>
+                    <div class="feature-text">Créez votre fiche en 2 minutes. Simple et sans engagement.</div>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">ðŸ“ˆ</div>
+                <div>
+                    <div class="feature-title">Visibilité garantie</div>
+                    <div class="feature-text">Soyez vu par des milliers de clients potentiels chaque jour.</div>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">ðŸ’°</div>
+                <div>
+                    <div class="feature-title">100% Gratuit</div>
+                    <div class="feature-text">Votre fiche gratuite vous appartient, sans commission.</div>
+                </div>
+            </div>
+        </div>
+        <div class="welcome-gift">ðŸŽ <strong>Bénéficiez d'un cadeau de bienvenue !</strong></div>
+        <div class="cta-section">
+            <button class="btn-cta btn-primary" onclick="window.location.href='/inscription'">ðŸ”˜ Je crée ma fiche gratuite</button>
+            <div class="btn-subtitle">Création rapide en 2 minutes, gratuite et sans engagement</div>
+            <button class="btn-cta btn-secondary" onclick="window.location.href='/connexion'">ðŸ”˜ Je me connecte Ã  mon compte</button>
+            <div class="btn-subtitle">DéjÃ  inscrit ? Reprenez lÃ  où vous en étiez</div>
+        </div>
+        <div class="promise-section">
+            <div class="promise-icon">ðŸŽ¯</div>
+            <h2 class="promise-title">Chaque jour, des milliers d'utilisateurs cherchent où manger halal près de chez eux</h2>
+            <p class="promise-text">ðŸ”¥ En rejoignant <span class="promise-highlight">HalalFood</span>, votre restaurant devient visible dans le flux, dans les recherches, et dans les recommandations.</p>
+            <div class="promise-footer">Aucun frais caché. Vous pouvez tester gratuitement.</div>
+        </div>
+    </div>
+    <div class="footer">© 2024 HalalFood - Tous droits réservés</div>
+    <script>
+        const VERTICAL_INTERVAL = 6000;
+        const HORIZONTAL_INTERVAL = 2000;
+        const restaurantSlides = document.querySelectorAll('.restaurant-slide');
+        let currentRestaurant = 0;
+        let photoIntervals = [];
+        function nextRestaurant() {
+            restaurantSlides[currentRestaurant].classList.remove('active');
+            currentRestaurant = (currentRestaurant + 1) % restaurantSlides.length;
+            restaurantSlides[currentRestaurant].classList.add('active');
+            initHorizontalCarousel(currentRestaurant);
+        }
+        function initHorizontalCarousel(restaurantIndex) {
+            if (photoIntervals[restaurantIndex]) clearInterval(photoIntervals[restaurantIndex]);
+            const restaurant = restaurantSlides[restaurantIndex];
+            const photos = restaurant.querySelectorAll('.photo-item');
+            const dots = restaurant.querySelectorAll('.dot');
+            let currentPhoto = 0;
+            photos.forEach(p => p.classList.remove('active-photo'));
+            dots.forEach(d => d.classList.remove('active-dot'));
+            photos[0].classList.add('active-photo');
+            dots[0].classList.add('active-dot');
+            photoIntervals[restaurantIndex] = setInterval(() => {
+                photos[currentPhoto].classList.remove('active-photo');
+                dots[currentPhoto].classList.remove('active-dot');
+                currentPhoto = (currentPhoto + 1) % photos.length;
+                photos[currentPhoto].classList.add('active-photo');
+                dots[currentPhoto].classList.add('active-dot');
+            }, HORIZONTAL_INTERVAL);
+        }
+        initHorizontalCarousel(0);
+        setInterval(nextRestaurant, VERTICAL_INTERVAL);
+    </script>
+</body>
+</html>

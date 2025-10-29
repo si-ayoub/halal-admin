@@ -1,0 +1,415 @@
+import 'package:flutter/material.dart';
+import '../../core/constants/app_colors.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/routes/app_routes.dart';
+
+class PaymentConfirmationPage extends StatefulWidget {
+  final String restaurantName;
+  final String planName;
+  final String planPrice;
+  final String planPeriod;
+  final DateTime? expirationDate;
+
+  const PaymentConfirmationPage({
+    Key? key,
+    required this.restaurantName,
+    required this.planName,
+    required this.planPrice,
+    required this.planPeriod,
+    this.expirationDate,
+  }) : super(key: key);
+
+  @override
+  State<PaymentConfirmationPage> createState() =>
+      _PaymentConfirmationPageState();
+}
+
+class _PaymentConfirmationPageState extends State<PaymentConfirmationPage>
+    with TickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+  int _countdown = 5;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Animation pulse du checkmark
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat();
+
+    _pulseAnimation = Tween<double>(begin: 1, end: 1.05).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+
+    // Countdown et redirection automatique
+    _startCountdown();
+  }
+
+  void _startCountdown() {
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() => _countdown--);
+        if (_countdown > 0) {
+          _startCountdown();
+        } else {
+          // Redirection automatique vers le dashboard
+          Navigator.pushReplacementNamed(
+            context,
+            AppRoutes.dashboard,
+            arguments: '', // restaurantId sera récupéré depuis Firestore
+          );
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final activationDate = DateTime.now();
+    final expirationDate =
+        widget.expirationDate ?? activationDate.add(const Duration(days: 365));
+    final formattedActivation =
+        '${activationDate.day} ${_getMonthName(activationDate.month)} ${activationDate.year}';
+    final formattedExpiration =
+        '${expirationDate.day} ${_getMonthName(expirationDate.month)} ${expirationDate.year}';
+
+    return Scaffold(
+      backgroundColor: AppColors.darkBackground,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+
+              // 1. Icon succès animé
+              ScaleTransition(
+                scale: _pulseAnimation,
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: AppColors.goldGradient,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.gold.withOpacity(0.4),
+                        blurRadius: 40,
+                        spreadRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.check_rounded,
+                    color: Colors.white,
+                    size: 48,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // 2. Titre principal
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: ShaderMask(
+                  shaderCallback: (bounds) =>
+                      AppColors.goldGradient.createShader(bounds),
+                  child: Text(
+                    'Bienvenue dans la\nFamille Halal !',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      height: 1.2,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // 3. Félicitations
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  'Félicitations ! Votre fiche restaurant est désormais active sur Mon Halal.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColors.textSecondary,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // 4. Annotation : Visibilité immédiate
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.gold.withOpacity(0.1),
+                  border: Border.all(
+                    color: AppColors.gold.withOpacity(0.3),
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '👁️ Votre établissement bénéficie dès maintenant d\'une visibilité garantie et sera mis en avant dans les prochaines 24h sur la carte des restaurants halal.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.gold,
+                    height: 1.6,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              // Divider
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+                height: 1,
+                color: Colors.white.withOpacity(0.1),
+              ),
+
+              const SizedBox(height: 32),
+
+              // 5. Détails transactionnels
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'DÉTAILS DE VOTRE ACTIVATION',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.gold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildInfoRow(
+                      icon: '✓',
+                      label: 'Plan actif',
+                      value:
+                          '${widget.planName} (${widget.planPrice}€/${widget.planPeriod})',
+                      valueColor: AppColors.gold,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildInfoRow(
+                      icon: '✓',
+                      label: 'Paiement validé',
+                      value: 'Stripe',
+                      valueColor: const Color(0xFF22C55E),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildInfoRow(
+                      icon: '🕒',
+                      label: 'Date d\'activation',
+                      value: formattedActivation,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildInfoRow(
+                      icon: '⏳',
+                      label: 'Validité',
+                      value: '12 mois (jusqu\'au $formattedExpiration)',
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              // Divider
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+                height: 1,
+                color: Colors.white.withOpacity(0.1),
+              ),
+
+              const SizedBox(height: 32),
+
+              // 6. Visibilité initiale
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'VOTRE VISIBILITÉ INITIALE',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.gold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildStatCard(
+                            value: '1000',
+                            label: 'Vues garanties',
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildStatCard(
+                            value: 'J+30',
+                            label: 'Prochain boost',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 48),
+
+              // 7. Loader avec redirection
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors.gold.withOpacity(0.2),
+                          width: 3,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.gold),
+                        strokeWidth: 3,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Préparation de votre espace personnel...',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Redirection automatique dans $_countdown secondes',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white.withOpacity(0.5),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 60),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow({
+    required String icon,
+    required String label,
+    required String value,
+    Color? valueColor,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$icon $label',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.white.withOpacity(0.6),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: valueColor ?? Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatCard({required String value, required String label}) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.03),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              color: AppColors.gold,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.white.withOpacity(0.6),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'Jan',
+      'Fév',
+      'Mar',
+      'Avr',
+      'Mai',
+      'Juin',
+      'Juil',
+      'Août',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Déc',
+    ];
+    return months[month - 1];
+  }
+}
